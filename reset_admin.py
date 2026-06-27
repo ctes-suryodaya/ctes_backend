@@ -25,4 +25,4 @@ with app.app_context():
         )
         db.session.add(new_admin)
         db.session.commit()
-        print(f"नयाँ एड्मिन बन्यो! Email: {admin_email}, Password: {new_password}")
+        print(f"New Admin! Email: {admin_email}, Password: {new_password}")

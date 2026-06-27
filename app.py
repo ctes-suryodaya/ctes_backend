@@ -3,17 +3,7 @@ from flask import Flask, send_from_directory
 from flask_cors import CORS
 from models import db, Post, User, Message, Report, Like, Comment
 from routes import api_bp
-import cloudinary
-import cloudinary.uploader
-from cloudinary.utils import cloudinary_url
 
-# तपाईंले अघि कपी गरेका विवरणहरू यहाँ राख्नुहोस्
-cloudinary.config( 
-  cloud_name = "uclrfhkv", 
-  api_key = "181254968853869", 
-  api_secret = "GrHY3yMPGZGJ__SoO02mse-ljeY",
-  secure = True
-)
 
 app = Flask(__name__)
 CORS(app)

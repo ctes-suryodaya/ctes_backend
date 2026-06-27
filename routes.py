@@ -83,7 +83,6 @@ def init_admin():
     return jsonify({'success': True, 'message': 'Admin already exists!', 'admin_id': admin.id}), 200
 
 # ३. नयाँ पोस्ट राख्ने API (फाइल अपलोड सुविधा सहित)
-# --- पोष्ट बनाउने र मिडिया Cloudinary मा पठाउने API ---
 @api_bp.route('/posts', methods=['POST'])
 def create_post():
     title = request.form.get('title')
@@ -108,6 +107,8 @@ def create_post():
     db.session.commit()
 
     return jsonify({'success': True, 'message': 'पोष्ट सफलतापूर्वक अपलोड भयो!'}), 201
+
+
 # --- ४. एड्मिन लगइन API ---
 @api_bp.route('/admin/login', methods=['POST'])
 def admin_login():
