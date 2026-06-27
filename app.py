@@ -1,0 +1,43 @@
+import os
+from flask import Flask, send_from_directory
+from flask_cors import CORS
+from models import db, Post, User, Message, Report, Like, Comment
+from routes import api_bp
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
+
+# तपाईंले अघि कपी गरेका विवरणहरू यहाँ राख्नुहोस्
+cloudinary.config( 
+  cloud_name = "uclrfhkv", 
+  api_key = "181254968853869", 
+  api_secret = "GrHY3yMPGZGJ__SoO02mse-ljeY",
+  secure = True
+)
+
+app = Flask(__name__)
+CORS(app)
+
+# उदाहरणका लागि:
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'avi'}
+
+# फाइलहरू सेभ हुने फोल्डर 'uploads' बनाउने
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://neondb_owner:npg_Gr9wWyqtEg3D@ep-small-queen-aozhzjn1-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+app.register_blueprint(api_bp, url_prefix='/api')
+
+# अपलोड भएका फाइलहरू एपमा देखाउन/तान्नको लागि Route
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all() 
+    app.run(debug=True, port=5000)
