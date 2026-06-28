@@ -29,12 +29,12 @@ def uploaded_file(filename):
 @app.route('/create-admin')
 def create_admin_route():
     from werkzeug.security import generate_password_hash
-    db.create_all() # तालिकाहरू बनाउने
+    db.create_all() 
     
     admin_email = 'admin@suryodaya.com'
-    existing_user = User.query.filter_by(email=admin_email).first()
+    user = User.query.filter_by(email=admin_email).first()
     
-    if not existing_user:
+    if not user:
         new_admin = User(
             username='Admin', 
             email=admin_email, 
@@ -44,8 +44,11 @@ def create_admin_route():
         db.session.add(new_admin)
         db.session.commit()
         return "<h1>✅ Admin created successfully on Live Server!</h1>"
-    
-    return "<h1>✅ Admin already exists!</h1>"
+    else:
+        # यदि एड्मिन पहिले नै छ भने पासवर्ड रिसेट गरिदिने
+        user.password_hash = generate_password_hash('admin123')
+        db.session.commit()
+        return "<h1>✅ Admin already exists. Password forcibly reset to admin123!</h1>"
 
 if __name__ == '__main__':
     with app.app_context():
