@@ -26,6 +26,26 @@ app.register_blueprint(api_bp, url_prefix='/api')
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+@app.route('/create-admin')
+def create_admin_route():
+    from werkzeug.security import generate_password_hash
+    db.create_all() # तालिकाहरू बनाउने
+    
+    admin_email = 'admin@suryodaya.com'
+    existing_user = User.query.filter_by(email=admin_email).first()
+    
+    if not existing_user:
+        new_admin = User(
+            username='Admin', 
+            email=admin_email, 
+            password_hash=generate_password_hash('admin123'), 
+            role='ADMIN'
+        )
+        db.session.add(new_admin)
+        db.session.commit()
+        return "<h1>✅ Admin created successfully on Live Server!</h1>"
+    
+    return "<h1>✅ Admin already exists!</h1>"
 
 if __name__ == '__main__':
     with app.app_context():
